@@ -1,0 +1,25 @@
+{
+  "name": "chatroom",
+  "description": "a simple chatRoom",
+  "main": "app.js",
+  "authors": [
+    "ervin"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "nodejs",
+    "chatroom"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "socket.io": "^1.5.1"
+  }
+}
