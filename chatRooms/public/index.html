@@ -7,16 +7,21 @@
 </head>
 <body>
 	<div id="content">
-		<div id="room"></div>
-		<div id="room_list"></div>
+		<div id="system_msg">
+			<div id="current_room"></div>
+			<div id="system_tips"></div>
+		</div>
 		<div id="message"></div>
+		<div id="room_list">
+			<div>聊天室列表</div>
+		</div>
 		<form id="send_form" target="_blank">
-			<input id="send_message" type="text"/>
+			<input id="send_message" type="text" placeholder="在这里输入消息/命令, 然后按回车键发送/执行"/>
 			<div id="help">
 				聊天设置命令行:
 				<ul>
-					<li>修改昵称: <code>/nick [昵称]</code></li>
-					<li>加入/创建新房间: <code>/join [房间名]</code></li>
+					<li>修改昵称： <code>/nick [昵称]</code></li>
+					<li>加入/创建新房间： <code>/join [房间名]</code></li>
 				</ul>
 			</div>
 		</form>

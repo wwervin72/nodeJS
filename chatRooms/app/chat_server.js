@@ -64,7 +64,8 @@ function joinRoom (socket, room) {
 	});
 	// 让房间里的其他用户知道有新用户进入了这个房间
 	socket.broadcast.to(room).emit('message', {
-		text: nickNames[socket.id] + ' 进入了 ' + room + '房间。'
+		text: nickNames[socket.id] + ' 进入了 ' + room + '房间。',
+		infoCate: 'newUser'
 	});
 	// 确定有哪些用户在这个房间
 	// 获取particular room中的客户端，返回所有在此房间的socket实例
@@ -82,13 +83,13 @@ function joinRoom (socket, room) {
 		var usersInRoomSummary = '当前房间里的人有: ';
 		for(var prop in usersInRoom.sockets){
 			if(count > 0){
-				usersInRoomSummary += ',';
+				usersInRoomSummary += ', ';
 			}
 			count++;
 			usersInRoomSummary += nickNames[prop];
 		}
 		usersInRoomSummary += '。';
-		socket.emit('message', {text: usersInRoomSummary});
+		socket.emit('message', {text: usersInRoomSummary, infoCate: "userList"});
 	}
 }
 
@@ -116,7 +117,8 @@ function handleNameChangeAttempts (socket, nickNames, namesUsed) {
 					name: name
 				});
 				socket.broadcast.to(currentRoom[socket.id]).emit('message', {
-					text: previousName + ' 改名成功, 现在叫做: ' + name + '。'
+					text: previousName + ' 改名成功, 现在叫做: ' + name + '。',
+					infoCate: 'modyfyName'
 				});
 			}else{
 				socket.emit('nameResult', {
@@ -133,7 +135,8 @@ function handleMessageBroadcasting (socket) {
 	socket.on('message', function (message) {
 		// 向发送消息的这个房间，广播消息
 		socket.broadcast.to(message.room).emit('message', {
-			text: nickNames[socket.id] + '说: ' + message.text
+			text: nickNames[socket.id] + ': ' + message.text,
+			infoCate: 'chatInfo'
 		});
 	});
 }

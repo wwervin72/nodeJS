@@ -13,24 +13,31 @@ $(document).ready(function () {
 		}else{
 			message = result.message;
 		}
-		$('#message').append(divSystemContentElement(message));
+		$('#system_tips').append(divSystemContentElement(message));
 	});
 
 	// 显示房间更换结果
 	socket.on('joinResult', function (result) {
-		$('#room').text(result.room);
-		$('#message').append(divEscapedContentElement('你已经进入了：' + result.room + '房间。'));
+		$('#current_room').text('坐标：'+result.room);
+		$('#system_tips').append(divEscapedContentElement('你已经进入了：' + result.room + '房间。'));
 	});
 
-	// 显示接受到的消息
+	// 显示用户的发言
 	socket.on('message', function (message) {
 		var newElement = $('<div></div>').text(message.text);
-		$('#message').append(newElement);
+		// 判断是聊天信心还是系统信息
+		if(message.infoCate === 'chatInfo'){
+			newElement.addClass();
+			$('#message').append(newElement.addClass('other'));
+		}else{
+			$('#system_tips').append(newElement);
+		}
 	});
 
 	// 显示可用房间列表
 	socket.on('rooms', function (data) {
 		$('#room_list').empty();
+		$('#room_list').append($('<div>聊天室列表</div>'));
 		for(var room in data.rooms){
 			room = room.substring(0, room.length);
 			if(!data.guest[room]){
@@ -38,7 +45,7 @@ $(document).ready(function () {
 			}
 		}
 		$('#room_list div').click(function () {
-			if($(this).text() === $('#room').text()){
+			if($(this).text() === $('#current_room').text()){
 				return;
 			}else{
 				chatApp.processCommand('/join ' + $(this).text());
@@ -99,8 +106,9 @@ function processUserInput (chatApp, socket) {
 		}
 	}else{
 		// 将非命令输入广播给其他用户
-		chatApp.sendMessage($('#room').text(), message);
-		$('#message').append(divEscapedContentElement(message));
+		chatApp.sendMessage($('#current_room').text(), message);
+		message += ' :我'; 
+		$('#message').append(divEscapedContentElement(message).addClass('ownInfo'));
 		$('#message').scrollTop($('#message').prop('scrollHeight'));
 	}
 	$('#send_message').val('');

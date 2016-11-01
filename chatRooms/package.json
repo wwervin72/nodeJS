@@ -2,12 +2,13 @@
   "name": "chatroom",
   "version": "0.0.1",
   "description": "a simple chatRoom",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "nodejs",
+    "socket.io",
     "chatroom"
   ],
   "author": "ervin",

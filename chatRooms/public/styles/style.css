@@ -1,47 +1,132 @@
+html, body{
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 body{
-	padding: 50px;
-	font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	font: 14px 'microsoft yahei', Helvetica, Arial, sans-serif;
+	background-color: rgba(0,0,0,0.1);
+}
+*{
+	box-sizing: border-box;
 }
 a{
 	color: #0087ff;
 }
-#content{
-	width: 800px;
-	margin-left: auto;
-	margin-right: auto;
+ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
-#room{
+input{
+	outline: none;
+	padding-left: 10px;
+	height: 36px;
+	line-height: 36px;
+	border: 1px solid #aaa;
+}
+#content{
+	width: 90%;
+	height: 90%;
+	margin: 5%;
+}
+#system_msg{
+	float: left;
+	width: 20%;
+	height: 70%;
 	background-color: #ddd;
-	margin-bottom: 1em;
+	color: #666;
+	font-size: 14px;
+	border-right: 1px solid #ddd;
+}
+#current_room{
+	width: 100%;
+	height: 42px;
+	line-height: 42px;
+	padding: 0 15px;
+	border-bottom: 1px dashed #b9b9b9;
+}
+#system_tips{
+	width: 100%;
+	height: calc(100% - 42px);
+	line-height: 26px;
+	overflow: auto;
+}
+#system_tips>div{
+	padding: 5px 10px;
+	color: #eee;
+}	
+#system_tips>div:nth-child(even){
+	background-color: #c1c1c1;
+}
+#system_tips>div:nth-child(odd){
+	background-color: #aaa;
 }
 #message{
-	width: 690px;
-	height: 300px;
+	float: left;
+	width: 70%;
+	height: 70%;
 	overflow: auto;
 	background-color: #eee;
 	margin-bottom: 1em;
-	margin-right: 10px;
+}
+#message>div{
+	width: 100%;
+	padding: 0 10px;
+	height: 30px;
+	line-height: 30px;
+	color: #666;
+}
+#message>div.other{
+	background-color: rgba(0,0,0, 0.2);
+}
+#message .ownInfo{
+	text-align: right;
 }
 #room_list{
-	float: right;
-	width: 100px;
-	height: 300px;
+	float: left;
+	width: 10%;
+	height: 70%;
+	background-color: rgba(0,0,0,0.1);
 	overflow: auto;
 }
 #room_list div{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 10px;
+	color: #f1f1f1;
+	cursor: pointer;
+	text-align: center;
 	border-bottom: 1px solid #eee;
 }
 #room_list div:hover{
 	background-color: #ddd;
+	color: #d1d1d1;
+}
+#send_form{
+	float: left;
+	width: 100%;
+	height: 29%;
+	margin-top: 1%;
 }
 #send_message{
-	width: 700px;
+	width: 100%;
 	margin-bottom: 1em;
-	margin-right: 1em;
 }
 #help{
-	font: 10px 'Lucida Grande', Helvetica, Arial, sans-serif;
+	padding: 5px 10px;
+	font-size: 10px;
+	color: #333;
 }
-
-
-
+#help>ul>li{
+	padding-left: 100px;
+	height: 20px;
+	line-height: 20px;
+	color: #666;
+}
+#help>ul>li>code{
+	font-family: 'microsoft yahei';
+}
