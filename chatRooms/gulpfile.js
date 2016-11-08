@@ -60,31 +60,13 @@ gulp.task('images', function () {
 		.pipe(notify({message: 'images task complete'}));
 });
 
-gulp.task('connect', function () {
-	connect.server({
-	    name: 'chatRoom',
-	    root: './server.js',
+gulp.task('connect', function() {
+  	connect.server({
+	    root: './public/',
 	    port: 3000,
-	    livereload: true
-	 });
+	    livereload: true,
+	});
 });
-
-// gulp.task('webserver', function () {
-// 	return gulp.src('server.js')
-// 		.pipe(webserver({
-// 			port: 3000,//端口
-// 			host: 'localhost',//域名
-// 			liveload: true,//实时刷新代码。不用f5刷新
-// 			directoryListing: {
-// 				path: 'server.js',
-// 				enable: true
-// 			}
-// 		}))
-// 		.pipe(notify({message: 'webserver task complete'}));
-// });
-// kill the webserver
-// var stream = gulp.src('app').pipe(webserver());
-// stream.emit('kill');
 
 gulp.task('clean', function () {
 	gulp.src(['./public/dist/css/', './public/dist/js/', './public/dist/img/'])
@@ -95,17 +77,15 @@ gulp.task('clear', function (done) {
 	return cache.clearAll(done);
 });
 
-gulp.task('default', ['clean', 'clear'], function () {
+gulp.task('default', function () {
 	gulp.start(['scripts', 'styles', 'images', 'connect']);
 });
 
-
-gulp.task('watch',['default'], function () {
+gulp.task('watch', ['default'], function () {
 
 	gulp.watch('./public/sass/**/*.scss', ['styles']);
 	gulp.watch('./public/scripts/**/*.js', ['scripts']);
 	gulp.watch('./public/images/**/*', ['images']);
-	gulp.watch('./server.js', ['connect']);
 
 	livereload.listen();
 });

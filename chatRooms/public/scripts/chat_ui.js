@@ -45,8 +45,8 @@ $(document).ready(function () {
 			}
 		}
 		$('#room_list div').click(function () {
-			if($(this).text() === $('#current_room').text()){
-				return;
+			if($('#current_room').text().indexOf($(this).text()) != -1){
+				return false;
 			}else{
 				chatApp.processCommand('/join ' + $(this).text());
 				$('#send_message').focus();
