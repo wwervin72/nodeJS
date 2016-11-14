@@ -134,7 +134,7 @@ function handleNameChangeAttempts (socket, nickNames, namesUsed) {
 function handleMessageBroadcasting (socket) {
 	socket.on('message', function (message) {
 		// 向发送消息的这个房间，广播消息
-		socket.broadcast.to(message.room).emit('message', {
+		socket.broadcast.to(message.room.substring(3)).emit('message', {
 			text: nickNames[socket.id] + ': ' + message.text,
 			infoCate: 'chatInfo'
 		});
