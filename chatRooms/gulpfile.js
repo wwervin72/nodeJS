@@ -10,9 +10,7 @@ var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	notify = require('gulp-notify'),
 	cache = require('gulp-cache'),
-	plumber = require('gulp-plumber'),
-	livereload = require('gulp-livereload'),
-	connect = require('gulp-connect');
+	plumber = require('gulp-plumber');
 
 
 gulp.task('styles', function () {
@@ -29,7 +27,6 @@ gulp.task('styles', function () {
 		.pipe(minifycss())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('./public/dist/css/'))
-		.pipe(livereload())
 		.pipe(notify({message: 'styles task complete'}));
 });
 
@@ -42,7 +39,6 @@ gulp.task('scripts', function () {
 		.pipe(uglify())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('./public/dist/js/'))
-		.pipe(livereload())
 		.pipe(notify({message: 'scripts task complete'}));
 });
 
@@ -56,16 +52,7 @@ gulp.task('images', function () {
 		}))
 		.pipe(cache(imagemin({optimizationLevel: 3, progressive: true, interlaced: true })))
 		.pipe(gulp.dest('./public/dist/img/'))
-		.pipe(livereload())
 		.pipe(notify({message: 'images task complete'}));
-});
-
-gulp.task('connect', function() {
-  	connect.server({
-	    root: './public/',
-	    port: 3000,
-	    livereload: true,
-	});
 });
 
 gulp.task('clean', function () {
@@ -78,7 +65,7 @@ gulp.task('clear', function (done) {
 });
 
 gulp.task('default', function () {
-	gulp.start(['scripts', 'styles', 'images', 'connect']);
+	gulp.start(['scripts', 'styles', 'images']);
 });
 
 gulp.task('watch', ['default'], function () {
@@ -87,5 +74,4 @@ gulp.task('watch', ['default'], function () {
 	gulp.watch('./public/scripts/**/*.js', ['scripts']);
 	gulp.watch('./public/images/**/*', ['images']);
 
-	livereload.listen();
 });
