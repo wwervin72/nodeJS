@@ -9,3 +9,4 @@ meadowlark/public/lib
 # put any other files you don't want to check in here,
 chatRooms/public/dist
 chatRooms/.sass-cache
+meadowlark/public/uploads

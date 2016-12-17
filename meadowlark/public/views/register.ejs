@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css"/>
+</head>
+<body>
+	<div class="formContainer">
+		<form class="form-horizontal newsletterForm" role="form" method="POST">
+			<input type="hidden" name="_csrf" value="<%= csrf %>">
+			<div class="form-group">
+				<label for="fieldName" class="col-sm-2 control-label">用户名: </label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="fieldName" name="name">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="fieldEmail" class="col-sm-2 control-label">邮箱: </label>
+				<div class="col-sm-4">
+					<input type="email" class="form-control" required id="fieldName" name="email">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-4">
+					<button type="submit" class="btn btn-default">Register</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="../lib/jquery/dist/jquery.min.js"></script>
+	<script>
+		$(function(){
+			$('.newsletterForm').on('submit', function(e){
+				var self = this;
+				var event  = e || window.event;
+				if(event.preventDefault){
+					event.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+				var action = $(this).attr('action');
+				$.ajax({
+					url: '/process',
+					type: 'POST',
+					dataType: 'json',
+					data: $(self).serialize(),
+					success: function(res){
+						if(res.result){
+							alert('注册成功');
+						} else {
+							alert('注册失败');
+						}
+					},
+					error: function(){
+						alert('注册失败');
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

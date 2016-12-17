@@ -20,6 +20,7 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "blueimp-file-upload": "jquery-file-upload#^9.14.1"
   }
 }
