@@ -1,0 +1,25 @@
+{
+  "name": "meadowlark",
+  "description": "express practice",
+  "main": "meadowlark.js",
+  "authors": [
+    "ervin"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "express",
+    "meadowlark"
+  ],
+  "homepage": "index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "./public/lib/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}

@@ -1,3 +1,11 @@
-#下面是我的.gitignore文件的内容
+# ignore packages installed by npm
 chatRooms/node_modules
+meadowlark/node_modules
+
+# ignore packages installed by bower
 chatRooms/public/libs
+meadowlark/public/lib
+
+# put any other files you don't want to check in here,
+chatRooms/public/dist
+chatRooms/.sass-cache

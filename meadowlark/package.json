@@ -1,0 +1,19 @@
+{
+  "name": "meadowlark",
+  "version": "0.0.1",
+  "description": "express practice",
+  "main": "meadowlark.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "meadowlark"
+  ],
+  "author": "ervin",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.5",
+    "express": "^4.14.0"
+  }
+}

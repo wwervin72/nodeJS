@@ -1,0 +1,21 @@
+body{
+	margin: 0;
+	padding: 0;
+	font: 14px 'microsoft yahei';
+}
+*{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box; /* Firefox */
+	-webkit-box-sizing: border-box; /* Safari */
+}
+ul{
+	list-style: none;
+}
+input{
+	outline: none;
+}
+.radius-none{
+	border-radius: 0;
+}
