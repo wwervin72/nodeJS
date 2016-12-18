@@ -5,6 +5,10 @@
 	<title>Document</title>
 	<link rel="stylesheet" href="../lib/bootstrap/dist/css/bootstrap.min.css"/>
 	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
 		.btn-file {
 			position: relative;
 			overflow: hidden;
@@ -24,33 +28,125 @@
 			cursor: inherit;
 			display: block;
 		}
+		.upload_wrap{
+			position: relative;
+			margin: 100px auto;
+		}
+		.upload_wrap, #upload_btn, #upload_file{
+			width: 100px;
+			height: 40px;
+		}
+		.radius-none{
+			border-radius: 0;
+		}
+		#upload_btn, #upload_file{
+			position: absolute;
+			top: 0;
+			left: 0;
+			text-align: center;
+			line-height: 40px;
+			padding: 0;
+		}
+		#upload_file{
+			opacity: 0;
+		}
+		ul{
+			list-style: none;
+			margin: 50px auto;
+		}
 	</style>
 </head>
 <body>
-	<span class="btn btn-default btn-file">Upload
+	<div class="upload_wrap">
+		<button class="btn btn-default radius-none" id="upload_btn">选择上传文件</button>
+		<input class="radius-none" type="file" id="upload_file" multiple />
+	</div>
+	<ul id="file_list">
+		
+	</ul>
+	<button class="btn btn-default radius-none" id="upload">开始上传</button>
+<!-- 	<span class="btn btn-default btn-file">Upload
 		<input type="file" class="form-control" required accept="image/*" id="fieldPhoto" 
 			data-url="/upload" multiple name="photo"/>
-	</span>
-	<div id="uploads"></div>
+	</span> -->
+	<!-- <div id="uploads"></div> -->
 	<script src="../lib/jquery/dist/jquery.min.js"></script>
-	<script src="../lib/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<!-- 	<script src="../lib/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
 	<script src="../lib/blueimp-file-upload/js/jquery.iframe-transport.js"></script>
-	<script src="../lib/blueimp-file-upload/js/jquery.fileupload.js"></script>
+	<script src="../lib/blueimp-file-upload/js/jquery.fileupload.js"></script> -->
 	<script>
-		$(function(){
-			$(document).ready(function(){
-				$('#fieldPhoto').fileupload({
-					dataType: 'json',
-					done: function(e, data){
-						$.each(data.result.files, function(index, file){
-							$('#fileUploads').append($('<div class="upload">' +
-							'<span class="glyphicon glyphicon-ok"></span>' +
-							'&nbsp;' + file.originalName + '</div>'));
-						});
-					}
-				});
+		var files = [];
+		$('#upload_file').change(function (e) {
+			var event = e || window.event;
+			var sel_files = this.files || event.dataTransfer.files;
+			Array.prototype.forEach.call(sel_files, function (item, index) {
+				if(files.length){
+					var name = item.name;
+					var fileExists = files.every(function (ele) {
+						return ele.name != name;
+					});
+					fileExists && files.push(item) && showSelectedFile(item);
+				}else{
+					files.push(item);
+					showSelectedFile(item);
+				}
 			});
 		});
+		$('#upload').click(function () {
+			if(!files.length){
+				alert('请选择文件');
+				return;
+			}
+			var formData = new FormData();
+			$(files).each(function (index, item) {
+				formData.append('file', item);
+				$.ajax({
+				    url: '/upload',
+				    type: 'POST',
+				    cache: false,
+				    data: formData,
+				    processData: false,
+				    contentType: false
+				}).then(function (res) {
+					if(res.files.length){
+						console.log('上传完成');
+						files.length = 0;
+						$('#file_list').empty();
+					}
+				})
+			})
+		});
+
+		function showSelectedFile (file) {
+			$('#file_list').append($('<li>文件名：'+ file.name +', 大小：'+file.size+'  <button class="btn btn-default" onclick="removeCurFile()">删除</button></li>'));
+		}
+
+		function removeCurFile (e) {
+			var event = e || window.event;
+			var target = event.target || event.srcElement;
+			var li = $(target).parent();
+
+			$('#file_list li').each(function (index, item) {
+				if(item == li[0]){
+					$(item).remove();
+					files.splice(index, 1);
+				}
+			});
+		}
+		// $(function(){
+		// 	$(document).ready(function(){
+		// 		$('#fieldPhoto').fileupload({
+		// 			dataType: 'json',
+		// 			done: function(e, data){
+		// 				$.each(data.result.files, function(index, file){
+		// 					$('#fileUploads').append($('<div class="upload">' +
+		// 					'<span class="glyphicon glyphicon-ok"></span>' +
+		// 					'&nbsp;' + file.originalName + '</div>'));
+		// 				});
+		// 			}
+		// 		});
+		// 	});
+		// });
 	</script>
 </body>
 </html>
