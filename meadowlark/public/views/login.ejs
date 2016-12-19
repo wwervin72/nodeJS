@@ -10,18 +10,18 @@
 </head>
 <body>
 	<div class="login_wrap">
-		<form class="form-horizontal row">
+		<form class="form-horizontal row" name="form">
 			<div class="form-group">
 				<label for="uname" class="control-label col-sm-3">用户名: </label>
 				<div class="col-sm-9">
-					<input type="text" class="form-control radius-none" id="uname" 
+					<input type="text" class="form-control radius-none" id="uname" name="uname" 
 						placeholder="用户名" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="pwd" class="control-label col-sm-3">密&nbsp;&nbsp;码: </label>
 				<div class="col-sm-9">
-					<input type="password" class="form-control radius-none" id="pwd"
+					<input type="password" class="form-control radius-none" id="pwd" name="pwd" 
 						placeholder="密码" />
 				</div>
 			</div>
@@ -42,12 +42,33 @@
 	<script src="lib/jquery/dist/jquery.min.js"></script>
 	<script>
 		$('#login').click(function (e) {
+			var data = {
+				uname: $('#uname').val(),
+				pwd: $('#pwd').val()
+			};
+			if(data.uname == '' || data.pwd == ''){
+				alert('请填入有效信息');
+				return;
+			}
 			var event = e || window.event;
 			if(event.preventDefault){
 				event.preventDefault();
 			}else{
 				event.returnValue = false;
 			}
+			var login = $.ajax({
+				url: 'http://localhost:3000/login',
+				type: 'POST',
+				data: data,
+				dataType: 'json'
+			});
+			login.then(function (res) {
+				if(res.result){
+					window.location.href = 'http://localhost:3000';
+				}
+			}, function (res) {
+
+			})
 		})
 	</script>
 </body>

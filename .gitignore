@@ -10,3 +10,4 @@ meadowlark/public/lib
 chatRooms/public/dist
 chatRooms/.sass-cache
 meadowlark/public/uploads
+meadowlark/credentials.js

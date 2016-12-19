@@ -2,9 +2,12 @@ var express = require('express'),
 	path = require('path'),
 	bodyParser = require('body-parser'),
 	jqupload = require('jquery-file-upload-middleware'),
+	credential = require('./credentials'),
 	fortune = require('./app/models/fortune');
 
 var app = express();
+
+app.use(require('cookie-parser')(credential.cookieSecret));
 
 app.set('port', process.env.PORT || 3000);
 
@@ -19,12 +22,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, './public/views/'));
 app.set('view engine', 'ejs');
 
+app.use(bodyParser());
+
 // 路由
 app.get('/', function (req, res) {
+	res.cookie('monster', 'nomnom');
+	res.cookie('signed_monster', 'nomnom', { signed: true });
 	res.render('home');
 });
 
 app.get('/about', function (req, res) {
+	var monster = req.cookies.monster;
+	var signedMonster = req.signedCookies.signed_monster;
 	res.render('about', {fortune: fortune.getFortune()});
 });
 
@@ -32,11 +41,16 @@ app.get('/login', function (req, res) {
 	res.render('login');
 });
 
+app.post('/login', function (req, res) {
+	res.json({
+		result: true,
+		info: '登陆成功'
+	});
+});
+
 app.get('/register', function (req, res) {
 	res.render('register', {csrf: 'CSRF token goes here'});
 });
-
-app.use(bodyParser());
 
 app.post('/process', function (req, res) {
 	res.json({
