@@ -26,14 +26,10 @@ app.use(bodyParser());
 
 // 路由
 app.get('/', function (req, res) {
-	res.cookie('monster', 'nomnom');
-	res.cookie('signed_monster', 'nomnom', { signed: true });
 	res.render('home');
 });
 
 app.get('/about', function (req, res) {
-	var monster = req.cookies.monster;
-	var signedMonster = req.signedCookies.signed_monster;
 	res.render('about', {fortune: fortune.getFortune()});
 });
 
@@ -42,6 +38,7 @@ app.get('/login', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
+	res.cookie('uname', req.body.uname, { signed: true });
 	res.json({
 		result: true,
 		info: '登陆成功'
