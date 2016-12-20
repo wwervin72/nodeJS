@@ -3,9 +3,39 @@ var express = require('express'),
 	bodyParser = require('body-parser'),
 	jqupload = require('jquery-file-upload-middleware'),
 	credential = require('./credentials'),
+	connect = require('connect'),
+	nodemailer = require('nodemailer'),
+	// smtpTransport = require('nodemailer-smtp-transport'),
 	fortune = require('./app/models/fortune');
 
 var app = express();
+
+var mailTransport = nodemailer.createTransport({
+    //https://github.com/andris9/nodemailer-wellknown#supported-services 支持列表
+    service: 'qq',
+    port: 465, // SMTP 端口
+    secureConnection: true, // 使用 SSL
+    auth: {
+        user: '2411120974@qq.com',
+        //这里密码不是qq密码，是你设置的smtp密码
+        pass: 'fockutwhvmgkdiii'
+    }
+});
+
+// var mailTransport = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
+
+mailTransport.sendMail({
+	from: '2411120974@qq.com',
+	to: 'lw_ervin@sina.cn',
+	subject: 'your Meadowlark Travel Tour',
+	// text: 'Thank you for booking your trip with Meadowlark Travel. We look forward to your visit!',
+	html: 'hello world'
+}, function (err) {
+	if(err){
+		console.error('Uable to send mail: ' + err);
+	}
+})
+
 
 app.use(require('cookie-parser')(credential.cookieSecret));
 
@@ -38,7 +68,7 @@ app.get('/login', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-	res.cookie('uname', req.body.uname, { signed: true });
+	res.cookie('meadowlark_username', req.body.uname, {signed: true, maxAge: 1800000});
 	res.json({
 		result: true,
 		info: '登陆成功'

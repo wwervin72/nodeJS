@@ -3,11 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>home-Meadowlark</title>
+	<link rel="icon" href="../img/favicon.ico"/>
 </head>
 <body>
 	<h1>home-Meadowlark</h1>
 	<script>
-		if(!document.cookie.length){
+		var cookies = document.cookie.split(';');
+		var logined = cookies.some(function (item) {
+			return item.indexOf('meadowlark_username=') === 1;
+		});
+		if(!logined){
 			window.location.href = 'http://localhost:3000/login';
 		}
 	</script>
