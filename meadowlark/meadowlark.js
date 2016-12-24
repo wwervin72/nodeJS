@@ -4,38 +4,12 @@ var express = require('express'),
 	jqupload = require('jquery-file-upload-middleware'),
 	credential = require('./credentials'),
 	connect = require('connect'),
-	nodemailer = require('nodemailer'),
-	// smtpTransport = require('nodemailer-smtp-transport'),
+	emailService = require('./app/lib/email.js')(credential),
 	fortune = require('./app/models/fortune');
 
 var app = express();
 
-var mailTransport = nodemailer.createTransport({
-    //https://github.com/andris9/nodemailer-wellknown#supported-services 支持列表
-    service: 'qq',
-    port: 465, // SMTP 端口
-    secureConnection: true, // 使用 SSL
-    auth: {
-        user: '2411120974@qq.com',
-        //这里密码不是qq密码，是你设置的smtp密码
-        pass: 'fockutwhvmgkdiii'
-    }
-});
-
-// var mailTransport = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
-
-mailTransport.sendMail({
-	from: '2411120974@qq.com',
-	to: 'lw_ervin@sina.cn',
-	subject: 'your Meadowlark Travel Tour',
-	// text: 'Thank you for booking your trip with Meadowlark Travel. We look forward to your visit!',
-	html: 'hello world'
-}, function (err) {
-	if(err){
-		console.error('Uable to send mail: ' + err);
-	}
-})
-
+emailService.send('lw_ervin@sina.cn', 'just a test email', '一封测试邮件');
 
 app.use(require('cookie-parser')(credential.cookieSecret));
 
