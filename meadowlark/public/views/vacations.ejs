@@ -3,6 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Vacations</title>
+	<style>
+		a.currency {
+			text-decoration: none;
+		}
+		.currency.selected {
+			font-weight: bold;
+			font-size: 150%;
+		}
+	</style>
 </head>
 <body>
 	<h1>Vacations</h1>
@@ -21,5 +30,11 @@
 			<% } %>
 		</div>
 	<% }) %>
+	<hr>
+	<p>货币:
+		<a href="/setCurrency/USD" class="currency <%= currencyUSD %>">USD</a> |
+		<a href="/setCurrency/GBP" class="currency <%= currencyGBP %>">GBP</a> |
+		<a href="/setCurrency/BTC" class="currency <%= currencyBTC %>">BTC</a>
+	</p>
 </body>
 </html>

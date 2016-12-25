@@ -1,15 +1,18 @@
 var express = require('express'),
+	session = require('express-session'),
+	MongoStore = require("connect-mongo")(session),
 	path = require('path'),
 	fs = require('fs'),
 	bodyParser = require('body-parser'),
 	jqupload = require('jquery-file-upload-middleware'),
 	credential = require('./credentials'),
-	connect = require('connect'),
 	emailService = require('./app/lib/email.js')(credential),
 	Vacation = require('./app/models/vacation'),
+	VacationInSeasonListener = require('./app/models/vacationInSeasonListener'),
 	fortune = require('./app/models/fortune');
 
 var app = express();
+
 var dataDir = path.join(__dirname, '/data');
 var vacationPhotoDir = path.join(dataDir, '/vacationPhoto');
 fs.existsSync(dataDir) || fs.mkdirSync(dataDir);
@@ -24,19 +27,38 @@ var opts = {
 	}
 };
 
-app.set('port', process.env.PORT || 3000);
+// 设置跨域
+// app.use(function (req, res, next) {
+// 	res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
+// 	next();
+// });
 
+app.set('views', path.join(__dirname, './public/views/'));
+app.set('view engine', 'ejs');
+app.set('port', process.env.PORT || 3000);
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser());
+app.use(require('cookie-parser')(credential.cookieSecret));
+app.use(session({
+   secret: credential.cookieSecret,
+   store:new MongoStore({
+      url: credential.mongo.dev.connectionString,
+      autoRemove: 'interval',
+      autoRemoveInterval: 30, // In minutes. Default 
+      ttl: 60
+   })
+}));
 
 switch (app.get('env')) {
 	case 'dev':
-		mongoose.connect('mongodb://' + credential.mongo.dev.connectionString, opts);
+		mongoose.connect(credential.mongo.dev.connectionString, opts);
 		break;
 	case 'pro':
-		mongoose.connect('mongodb://' + credential.mongo.pro.connectionString, opts);
+		mongoose.connect(credential.mongo.pro.connectionString, opts);
 		break;
 	default:
-		mongoose.connect('mongodb://' + credential.mongo.dev.connectionString, opts);
+		mongoose.connect(credential.mongo.dev.connectionString, opts);
 		break;
 }
 
@@ -88,19 +110,6 @@ Vacation.find(function(err, vacations){
 	}).save();
 });
 
-// 设置跨域
-// app.use(function (req, res, next) {
-// 	res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
-// 	next();
-// });
-
-app.set('views', path.join(__dirname, './public/views/'));
-app.set('view engine', 'ejs');
-
-app.use(bodyParser());
-app.use(require('cookie-parser')(credential.cookieSecret));
-// app.use(require('express-session')());
-
 // 路由
 app.get('/', function (req, res) {
 	res.render('home');
@@ -127,20 +136,71 @@ app.get('/vacations', function (req, res) {
 		if(err){
 			console.log(err);
 		}
+		var currency = req.session.currency || 'USD';
 		var context = {
+			currency: currency,
 			vacations: rows.map(function(row){
 				return {
 					sku: row.sku,
 					name: row.name,
 					description: row.description,
-					price: row.getDisplayPrice(),
+					price: convertFromUSD(row.getDisplayPrice(), currency),
 					inSeason: row.inSeason,
+					qty: row.qty
 				}
-			})
+			}),
+			currencyUSD: '',
+			currencyGBP: '',
+			currencyBTC: ''
 		};
+		switch (currency) {
+			case 'USD': 
+				context.currencyUSD = 'selected'; 
+				break;
+			case 'GBP': 
+				context.currencyGBP = 'selected'; 
+				break;
+			case 'BTC': 
+				context.currencyBTC = 'selected'; 
+				break;
+		}
 		res.render('vacations', context);
 	})
 });
+
+app.get('/setCurrency/:currency', function (req, res) {
+	req.session.currency = req.params.currency;
+	return res.redirect(303, '/vacations');
+});
+
+app.get('/notifyVacation', function (req, res) {
+	res.render('notify-me-when-in-season', {sku: req.body.sku});
+});
+app.post('notifyVacation', function (req, res) {
+	VacationInSeasonListener.update(
+		{email: req.body.email},
+		{$push: {skus: req.body.sku}},
+		{upsert: true},
+		function (err) {
+			if(err){
+				console.error(err.stack);
+				req.session.flash = {
+					type: 'danger',
+					intro: 'Ooops!',
+					message: 'There was an error processing your request.'
+				};
+				return res.redirect(303, '/vacations');
+			}
+			req.session.flash = {
+				type: 'success',
+				intro: 'Thank you!',
+				message: 'You will be notified when this vacation is in season.',
+			};
+			return res.redirect(303, '/vacations');
+		}
+	)
+});
+
 
 app.get('/register', function (req, res) {
 	res.render('register', {csrf: 'CSRF token goes here'});
@@ -169,8 +229,7 @@ app.use('/upload', function (req, res, next) {
 	})(req, res, next);
 });
 
-app.get('/header', function (req, res) {+
-
+app.get('/header', function (req, res) {
 	res.set('text/plain');
 	var s = '';
 	for(var name in req.headers){
@@ -253,15 +312,32 @@ app.use(function (req, res) {
 
 //定制500页面
 app.use(function (err, req, res, next) {
+	console.error(err.stack);
 	res.status(500);
 	res.render('500');
 })
 
 app.listen(app.get('port'), function () {
-	console.log(app.get('env'))
 	console.log('Express started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
 });
 
 function saveContestEntry(contestName, email, year, month, photoPath) {
 	// to do
+}
+
+function convertFromUSD (value, currency) {
+	switch (currency) {
+		case 'USD':
+			return value * 1;
+			break;
+		case 'GBP':
+			return value * 0.6;
+			break;
+		case 'BTC':
+			return value * 0.0023707918444761;
+			break;
+		default:
+			return NaN;
+			break;
+	}
 }
