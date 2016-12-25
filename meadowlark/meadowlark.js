@@ -27,6 +27,16 @@ var opts = {
 	}
 };
 
+var staff = {
+	shenzen: {
+		ervin: { bio: 'Mitch is the man to have at your back.' },
+		lw: { bio: 'Madeline is our Oregon expert.' }
+	},
+	chengdu: {
+		cmy: { bio: 'Walt is our Oregon Coast expert.' }
+	}
+};
+
 // 设置跨域
 // app.use(function (req, res, next) {
 // 	res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
@@ -304,6 +314,26 @@ app.post('/contest/vacation-photo/:year/:month', function(req, res){
 	});
 });
 
+app.get('/page-with-specials', specials, function (req, res, next) {
+	res.render('page-with-specials');
+});
+
+app.get('/secret', authorize, function (req, res, next) {
+	res.render('secret');
+});
+
+app.get('/sub-rosa', authorize, function (req, res, next) {
+	res.render('sub-rosa');
+});
+
+app.get('/staff/:city/:name', function (req, res, next) {
+	var info = staff[req.params.city][req.params.name];
+	if(!info){
+		return next();
+	}
+	res.render('staffer', {uname: req.params.name, address: req.params.city, info: info});
+});
+
 // 定制404页面
 app.use(function (req, res) {
 	res.status(404);
@@ -340,4 +370,16 @@ function convertFromUSD (value, currency) {
 			return NaN;
 			break;
 	}
+}
+
+function specials (req, res, next) {
+	res.locals.specials = getSpecialsFromDatabase();
+	next();
+}
+
+function authorize (req, res, next) {
+	if(req.session.authorize){
+		return next();
+	}
+	res.render('not-authorized');
 }
