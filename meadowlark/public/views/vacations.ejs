@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Vacations</title>
+</head>
+<body>
+	<h1>Vacations</h1>
+	<% vacations.forEach(function(item){ %>
+		<div class="vacation">
+			<h3><%= item.name %></h3>
+			<p><%= item.description %></p>
+			<% if(item.inSeason){ %>
+				<span class="price"><%= item.price %></span>
+				<a href="/cart/add?sku=<%= item.sku %>" class="btn btn-default">Buy Now!</a>
+			<% }else{ %>
+				<span class="outOfSeason">We're sorry, this vacation is currently not in season.</span>
+				<a href="/notify-me-when-in-season?sku=<%= item.sku %>">
+					Notify me when this vacation is in season.
+				</a>
+			<% } %>
+		</div>
+	<% }) %>
+</body>
+</html>
