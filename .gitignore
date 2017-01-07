@@ -1,12 +1,15 @@
 # ignore packages installed by npm
 chatRooms/node_modules
 meadowlark/node_modules
+myBlog/node_modules
 
 # ignore packages installed by bower
 chatRooms/public/libs
 meadowlark/public/lib
+myBlog/public/libs
+myBlog/public/upload
 
-# put any other files you don't want to check in here,
+# put any other files you don't want to check in here
 chatRooms/public/dist
 chatRooms/.sass-cache
 meadowlark/public/uploads
