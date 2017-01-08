@@ -1,11 +1,9 @@
 const Users = require('../models/users');
 const sha1 = require('sha1');
 const path = require('path');
-const promise = require('mpromise');
-const mongoose = require('mongoose');
-const config = require('../config/default');
 
 module.exports = {
+	// 注册用户
 	register: function register (req, res, next) {
 		let name = req.fields.name;
 	  	let gender = req.fields.gender;
@@ -43,11 +41,13 @@ module.exports = {
 			}
 	  	});
 	},
+	// 登出
 	signout: function signout(req, res, next) {
 		delete req.session.user;
 		req.flash('success', '退出成功');
 		res.redirect('/')
 	},
+	// 登陆
 	signin: function signin (req, res, next) {
 		let name = req.fields.name;
 		let password = req.fields.password;
@@ -67,5 +67,12 @@ module.exports = {
 		    // 跳转到主页
 		    res.redirect('/' + row._id);
 		});
+	},
+	// 根据用户名获取用户信息
+	getUserByName: function getUserByName (name) {
+		return Users
+			.findOne({name: name})
+			.addCreatedAt()
+			.exec();
 	}
-}
+};

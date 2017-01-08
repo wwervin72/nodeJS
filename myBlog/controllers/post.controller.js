@@ -31,15 +31,18 @@ module.exports = {
 		});
 	},
 	getAllPosts: function getAllPosts() {
-		return Post.find({})
-			.populate({path: 'author', model: 'User'})
+		return Post.find()
+			.populate('author')
 			.sort({_id: -1});
 	},
 	// 通过文章id查找文章
 	getPostById: function getPostById (postId) {
-		return Post.findOne({_id: postId})
-			.populate({path: 'author', model: 'User'})
-			.sort({_id: -1});
+		return Post
+			.findOne({_id: postId})
+			.populate('author')
+			// .addCreatedAt()
+			// .contentToHtml()
+			.exec();
 	},
 	getPosts: function getPosts (author) {
 		let query = {};
@@ -48,8 +51,11 @@ module.exports = {
 		}
 		return Post
 			.find(query)
-			.populate({path: 'author', model: 'User'})
-			.sort({_id: -1});
+			.populate('author')
+			.sort({_id: -1})
+			// .addCreatedAt()
+			// .contentToHtml()
+			.exec();
 	},
 	incPv: function incPv (postId) {
 		return Post.update({_id: postId}, {$inc: {pv: 1}});
@@ -58,7 +64,7 @@ module.exports = {
 	getRawPostById: function getRawPostById (author, postId) {
 		return Post
 		    .findOne({author: author, _id: postId})
-		    .populate({path: 'author', model: 'User'});
+		    .populate('author');
 	},
 	updatePostById: function updatePostById(author, postId, data) {
 	  	return Post

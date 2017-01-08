@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const addCreatedAt = require('../lib/mongo');
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
 	name: {
 		type: 'string'
 	},
@@ -18,6 +19,8 @@ const UserSchema = mongoose.Schema({
 		type: 'string'
 	}
 });
+
+UserSchema.plugin(addCreatedAt);
 
 const User = mongoose.model('User', UserSchema);
 

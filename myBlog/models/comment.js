@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
-const commontSchema = mongoose.Schema({
+const commontSchema = new mongoose.Schema({
 	author: {
-		type: mongoose.Types.ObjectId,
+		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	},
 	content: {
 		type: 'string'
 	},
 	postId: {
-		type: mongoose.Types.ObjectId
+		type: mongoose.Schema.Types.ObjectId
 		ref: 'Post'
 	}
 });
