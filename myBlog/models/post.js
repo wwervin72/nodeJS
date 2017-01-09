@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-// const addCreatedAt = require('../lib/mongo');
-const monment = require('moment');
+const moment = require('moment');
 const objectIdToTimestamp = require('objectid-to-timestamp');
 
 const PostSchema = new mongoose.Schema({
@@ -19,42 +18,22 @@ const PostSchema = new mongoose.Schema({
 	}
 });
 
-PostSchema.post('find', function (err, results, next) {
-	console.log(results)
-	// results.forEach(function (item, index) {
-	// 	item.created_at = moment(objectIdToTimestamp(item._id)).format('YYYY-MM-DD HH:mm');
-	// });
-	// next();
+PostSchema.post('find', function (result, next) {
+	result.forEach(function (item, index) {
+		item.created_at = moment(objectIdToTimestamp(item._id)).format('YYYY-MM-DD HH:mm');
+	});
+	next();
 });
 
-// PostSchema.post('findOne', function (next) {
+PostSchema.post('findOne', function (result, next) {
+	result.created_at = moment(objectIdToTimestamp(result._id)).format('YYYY-MM-DD HH:mm');
+	next();
+});
 
-// 	if(result){
-// 			result.created_at = moment(objectIdToTimestamp(result._id)).format('YYYY-MM-DD HH:mm');
-// 		}
-// 	results.forEach(function (item, index) {
-// 		item.created_at = moment(objectIdToTimestamp(item._id)).format('YYYY-MM-DD HH:mm');
-// 	});
-// 	next();
-// });
-
-
-// PostSchema.pulgin('contentToHtml', {
-// 	afterFind: function (posts) {
-// 	    return posts.map(function (post) {
-// 		    post.content = marked(post.content);
-// 		    return post;
-// 	    });
-// 	},
-// 	afterFindOne: function (post) {
-// 	    if(post){
-// 	      	post.content = marked(post.content);
-// 	    }
-// 	    return post;
-// 	}
-// });
-
-// PostSchema.pulgin(addCreatedAt);
+// 查找之前执行
+PostSchema.pre('find', function (next) {
+	next();
+})
 
 const Post = mongoose.model('Post', PostSchema);
 

@@ -7,7 +7,7 @@ const UserModel = require('../controllers/users.controller');
 
 
 //GET / 所有用户的文章
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res, next){
 	// 获取所有用户的所有文章
 	PostModel.getAllPosts().then(function (result) {
 		res.render('posts', {

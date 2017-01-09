@@ -31,17 +31,17 @@ module.exports = {
 		});
 	},
 	getAllPosts: function getAllPosts() {
-		return Post.find()
+		return Post
+			.find()
 			.populate('author')
-			.sort({_id: -1});
+			.sort({_id: -1})
+			.exec();
 	},
 	// 通过文章id查找文章
 	getPostById: function getPostById (postId) {
 		return Post
 			.findOne({_id: postId})
 			.populate('author')
-			// .addCreatedAt()
-			// .contentToHtml()
 			.exec();
 	},
 	getPosts: function getPosts (author) {
@@ -53,8 +53,6 @@ module.exports = {
 			.find(query)
 			.populate('author')
 			.sort({_id: -1})
-			// .addCreatedAt()
-			// .contentToHtml()
 			.exec();
 	},
 	incPv: function incPv (postId) {
