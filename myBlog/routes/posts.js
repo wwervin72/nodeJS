@@ -4,6 +4,7 @@ const router = express.Router();
 const checkLogin = require('../middlewares/check').checkLogin;
 const PostModel = require('../controllers/post.controller');
 const UserModel = require('../controllers/users.controller');
+const CommentModel = require('../controllers/comment.controller');
 
 
 //GET / 所有用户的文章
@@ -47,15 +48,18 @@ router.get('/:author/:postId', function(req, res, next) {
 
 	Promise.all([
 		PostModel.getPostById(postId),
+		CommentModel.getComments(postId),
 		PostModel.incPv(postId)
 	]).then(function (result) {
 		let post = result[0];
+		let comments = result[1];
 		if(!post){
 			// 文章不存在
 			res.render('404');
 		}
 		res.render('post', {
-			post: post
+			post: post,
+			comments: comments
 		});
 	});
 
@@ -116,21 +120,36 @@ router.get('/:author/:postId/remove', checkLogin, function(req, res, next) {
 			if(!result){
 				throw new Error('文章不存在');
 			}
-			PostModel.removePostById(author, postId)
-				.then(function (result) {
-					res.redirect('/'+author)
-				});
+
+			Promise.all([
+				PostModel.removePostById(author, postId),
+				CommentModel.delCommentsByPostId(postId)
+			]).then(function (result) {
+				res.redirect('/' + author)
+			});
+			// PostModel.removePostById(author, postId)
+			// 	.then(function (result) {
+			// 		res.redirect('/'+author)
+			// 	});
 		});
 });
 
 // POST /posts/:postId/comment 创建一条留言
-router.post('/:postId/comment', checkLogin, function(req, res, next) {
-  res.send(req.flash());
+router.post('/:author/:postId/comment', checkLogin, function(req, res, next) {
+	CommentModel.create(req, res, next);
 });
 
 // GET /posts/:postId/comment/:commentId/remove 删除一条留言
-router.get('/:postId/comment/:commentId/remove', checkLogin, function(req, res, next) {
-  res.send(req.flash());
+router.get('/:author/:postId/comment/:commentId/remove', checkLogin, function(req, res, next) {
+	let commentId = req.params.commentId;
+	let author = req.session.user._id;
+
+	CommentModel.delCommentById(commentId, author)
+		.then(function () {
+			req.flash('success', '删除留言成功');
+		    // 删除成功后跳转到上一页
+		    res.redirect('back');
+		});
 });
 
 module.exports = router;

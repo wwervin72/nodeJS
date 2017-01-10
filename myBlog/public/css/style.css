@@ -76,3 +76,11 @@ a:hover {
 .post-content .tag.right a {
     color: #999;
 }
+
+.ui.comments .comment .avatar{
+    height: 2.5em;
+}
+
+.ui.comments .comment{
+    border-bottom: 1px solid #ddd;
+}

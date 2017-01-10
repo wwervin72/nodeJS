@@ -2,16 +2,31 @@ const Comment = require('../models/comment');
 
 module.exports = {
 	// 创建一个留言
-	create: function create(comment) {
-		return Comment.create(comment).exec();
+	create: function create(req, res, next) {
+		let author = req.session.user._id;
+		let postId = req.params.postId;
+		let content = req.fields.content;
+
+		Comment.create({
+			author: author,
+		    postId: postId,
+		    content: content
+		}, function (result) {
+			req.flash('success', '留言成功');
+			res.redirect('back');
+		});
 	},
 	// 通过留言ID和作者ID删除一个留言
 	delCommentById: function delCommentById(commentId, author) {
-		return Comment.remove({author: author, _id: commentId}).exec();
+		return Comment
+			.remove({author: author, _id: commentId})
+			.exec();
 	},
 	// 根据文章ID删除该文章下所有留言
 	delCommentsByPostId: function delCommentsByPostId (postId) {
-		return Comment.remove({postId: postId}).exec();
+		return Comment
+			.remove({postId: postId})
+			.exec();
 	},
 	// 通过文章ID获取该文章下所有留言，按留言创建时间升序
 	getComments: function getComments (postId) {
@@ -23,6 +38,8 @@ module.exports = {
 	},
 	// 根据文章获取改文章下留言数
 	getCommentsCount: function getCommentsCount (postId) {
-		return Comment.count({postId: postId}).exec();
+		return Comment
+			.count({postId: postId})
+			.exec();
 	}
 };

@@ -62,14 +62,17 @@ module.exports = {
 	getRawPostById: function getRawPostById (author, postId) {
 		return Post
 		    .findOne({author: author, _id: postId})
-		    .populate('author');
+		    .populate('author')
+		    .exec();
 	},
 	updatePostById: function updatePostById(author, postId, data) {
 	  	return Post
-	  		.update({author: author, _id: postId}, {$set: data});
+	  		.update({author: author, _id: postId}, {$set: data})
+	  		.exec();
 	},
 	removePostById: function removePostById(author, postId) {
 		return Post
-			.remove({author: author, _id: postId});
+			.remove({author: author, _id: postId})
+			.exec();
 	}
 };
