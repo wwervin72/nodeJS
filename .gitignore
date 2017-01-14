@@ -7,10 +7,12 @@ myBlog/node_modules
 chatRooms/public/libs
 meadowlark/public/lib
 myBlog/public/libs
-myBlog/public/upload
+
 
 # put any other files you don't want to check in here
 chatRooms/public/dist
 chatRooms/.sass-cache
 meadowlark/public/uploads
 meadowlark/credentials.js
+myBlog/public/upload
+myBlog/config/production.js
