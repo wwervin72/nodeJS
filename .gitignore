@@ -16,3 +16,4 @@ meadowlark/public/uploads
 meadowlark/credentials.js
 myBlog/public/upload
 myBlog/config/production.js
+myBlog/logs/*
