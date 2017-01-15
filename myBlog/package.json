@@ -1,5 +1,5 @@
 {
-  "name": "myblog",
+  "name": "blog",
   "version": "1.0.0",
   "description": "this is ervin's first node blog",
   "main": "index.js",
