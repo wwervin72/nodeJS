@@ -2,11 +2,13 @@
 chatRooms/node_modules
 meadowlark/node_modules
 myBlog/node_modules
+nodejs+express+mongoose/node_modules
 
 # ignore packages installed by bower
 chatRooms/public/libs
 meadowlark/public/lib
 myBlog/public/libs
+nodejs+express+mongoose/public/lib
 
 
 # put any other files you don't want to check in here
